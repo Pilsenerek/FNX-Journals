@@ -1,0 +1,9 @@
+### IDEs ###
+.idea
+/nbproject/
+
+###> cache/data etc. ###
+/var/
+
+###> outer libraries ###
+/vendor/

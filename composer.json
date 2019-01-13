@@ -1,0 +1,21 @@
+{
+    "name": "michal_zbieranek/test",
+    "description": "My test app",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Michal Zbieranek",
+            "email": "pilsenerek@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    }
+}
