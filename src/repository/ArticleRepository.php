@@ -10,6 +10,7 @@ use App\Repository\AuthorRepository;
 use App\Repository\CategoryRepository;
 use App\Repository\TagRepository;
 use App\RepositoryAbstract;
+use PDOStatement;
 use stdClass;
 
 /**
@@ -30,17 +31,60 @@ class ArticleRepository extends RepositoryAbstract {
     }
 
     /**
+     * @param array $filter [field => value]
      * @return array
      */
-    public function getArticles(): array {
-        $query = $this->pdo->prepare("select * from article");
-        $query->execute();
+    public function getArticles(array $filter = []): array {
+        $rawQuery = "select * from article";
+        $query = $this->pdo->prepare($rawQuery);
+        $queryWithCond = $this->prepareWhere($query, $filter);
+        $queryWithCond->execute();
         $articles = [];
-        while ($stdClass = $query->fetchObject()) {
+        while ($stdClass = $queryWithCond->fetchObject()) {
             $articles[] = $this->createArticleModel($stdClass);
         }
 
         return $articles;
+    }
+
+    /**
+     * @param array $filter
+     * @return string
+     */
+    private function prepareWhere(PDOStatement $pdoQuery, array $filter): PDOStatement {
+        $rawQuery = $pdoQuery->queryString;
+        if (!empty($filter)) {
+            $where = " where ";
+            $wheres = $this->prepareWhereChunks($filter);
+            $where .= join(" and ", $wheres);
+            $rawQuery .= $where;
+        }
+        $newPdo = $this->pdo->prepare($rawQuery);
+        foreach ($filter as $field => $value) {
+            $newPdo->bindParam(':' . $field, $value);
+        }
+
+        return $newPdo;
+    }
+
+    /**
+     * @param array $filter
+     * @return array
+     */
+    private function prepareWhereChunks(array $filter): array {
+        $relatedFields = [
+            'author_id' => 'id in(select article_id from article_has_author where author_id=:author_id)',
+            'tag_id' => 'id in(select article_id from article_has_tag where tag_id=:tag_id)',
+        ];
+        foreach ($filter as $field => $value) {
+            if (array_key_exists($field, $relatedFields)) {
+                $wheres[] = $relatedFields[$field];
+            } else {
+                $wheres[] = $field . " = :" . $field;
+            }
+        }
+
+        return $wheres;
     }
 
     /**

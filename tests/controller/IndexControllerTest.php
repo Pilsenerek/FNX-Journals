@@ -15,6 +15,11 @@ class IndexControllerTest extends TestCase {
     public function testIndexAction() {
         $mock = $this->getMockedIndexController();
         $this->assertIsArray($mock->indexAction());
+        
+        $_REQUEST['category_id'] = 999;
+        $mock = $this->getMockedIndexController();
+        $this->assertIsArray($mock->indexAction());
+        
         $this->noDbAction();
     }
 

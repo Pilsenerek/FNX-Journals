@@ -131,7 +131,7 @@ INSERT INTO `author` VALUES ('2', 'Roger', 'Penrose', null);
 INSERT INTO `author` VALUES ('3', 'Henry', 'Walton Jones III', null);
 INSERT INTO `author` VALUES ('4', 'Johann', 'Voynich', null);
 INSERT INTO `author` VALUES ('5', 'Martha', 'Stewart', null);
-INSERT INTO `category` VALUES ('1', 'Health\r\nHealth');
+INSERT INTO `category` VALUES ('1', 'Health');
 INSERT INTO `category` VALUES ('2', 'Science');
 INSERT INTO `category` VALUES ('3', 'Archaeology');
 INSERT INTO `category` VALUES ('4', 'Miscelenous');

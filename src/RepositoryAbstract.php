@@ -8,6 +8,7 @@ use PDO;
 use stdClass;
 
 /**
+ * @todo implement simple query builder
  * @todo implement dynamic joining like getArticle($with = [Tag::class, Category::class])
  * 
  * @author Michal Zbieranek

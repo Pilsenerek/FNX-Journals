@@ -16,8 +16,14 @@ class IndexController {
      * @return array
      */
     public function indexAction(): array {
+        $filterLists = [
+            'category_id',
+            'tag_id',
+            'author_id',
+        ];
+        $filter = array_intersect_key($_REQUEST, array_flip($filterLists));
         $data = [
-            'articles' => $this->getArticleRepository()->getArticles(),
+            'articles' => $this->getArticleRepository()->getArticles($filter),
         ];
 
         return $data;

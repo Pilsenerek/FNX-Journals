@@ -38,6 +38,7 @@ class AuthorRepository extends RepositoryAbstract {
      */
     private function createAuthorModel(stdClass $stdClass) {
         $author = new Author();
+        $author->setId((int)$stdClass->id);
         $author->setFirstName($stdClass->first_name);
         $author->setLastName($stdClass->last_name);
         $author->setAbout($stdClass->about);

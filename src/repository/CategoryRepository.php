@@ -30,6 +30,7 @@ class CategoryRepository extends RepositoryAbstract {
      */
     private function createCategoryModel(stdClass $stdClass) {
         $category = new Category();
+        $category->setId((int)$stdClass->id);
         $category->setName($stdClass->name);
 
         return $category;

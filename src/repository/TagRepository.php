@@ -38,6 +38,7 @@ class TagRepository extends RepositoryAbstract {
      */
     private function createTagModel(stdClass $stdClass) {
         $tag = new Tag();
+        $tag->setId((int)$stdClass->id);
         $tag->setName($stdClass->name);
 
         return $tag;
