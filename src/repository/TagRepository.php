@@ -31,6 +31,30 @@ class TagRepository extends RepositoryAbstract {
 
         return $tags;
     }
+    
+    /**
+     * @return type
+     */
+    public function getTagsOrderByPopularity(){
+        $query = $this->pdo->prepare(
+                "select *,(
+                    select count(article_id) 
+                    from article_has_tag 
+                    where tag_id=tag.id 
+                    group by tag_id limit 1
+                ) as number_of_articles
+                from tag
+                order by number_of_articles DESC
+                "
+        );
+        $query->execute();
+        $tags = [];
+        while ($stdClass = $query->fetchObject()) {
+            $tags[] = $this->createTagModel($stdClass);
+        }
+
+        return $tags;
+    }
 
     /**
      * @param stdClass $stdClass
@@ -38,8 +62,11 @@ class TagRepository extends RepositoryAbstract {
      */
     private function createTagModel(stdClass $stdClass) {
         $tag = new Tag();
-        $tag->setId((int)$stdClass->id);
+        $tag->setId((int) $stdClass->id);
         $tag->setName($stdClass->name);
+        if (!empty($stdClass->number_of_articles)) {
+            $tag->setNumberOfArticles((int) $stdClass->number_of_articles);
+        }
 
         return $tag;
     }

@@ -17,6 +17,13 @@ class Tag {
     /** $var string */
     private $name;
 
+    /** 
+     * Not mapped in DB
+     * 
+     * @var int
+     */
+    private $numberOfArticles = null;
+    
     /**
      * @return int
      */
@@ -52,5 +59,24 @@ class Tag {
 
         return $this;
     }
+
+    /**
+     * @return int|null
+     */
+    public function getNumberOfArticles() : ?int {
+        
+        return $this->numberOfArticles;
+    }
+
+    /**
+     * @param type $numberOfArticles
+     * @return Tag
+     */
+    public function setNumberOfArticles($numberOfArticles) : Tag {
+        $this->numberOfArticles = $numberOfArticles;
+        
+        return $this;
+    }
+
 
 }

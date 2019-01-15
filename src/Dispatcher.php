@@ -52,7 +52,7 @@ class Dispatcher {
     /**
      * @return object
      */
-    protected function getControllerInstance(): object {
+    private function getControllerInstance(): object {
         $controllerClass = 'App\\Controller\\' . $this->getControllerName();
         if (class_exists($controllerClass)) {
 
@@ -66,7 +66,7 @@ class Dispatcher {
     /**
      * @return string
      */
-    private function getControllerName(): string {
+    public function getControllerName(): string {
         if (empty($this->request['c'])) {
 
             return $this->defaultController;
@@ -79,7 +79,7 @@ class Dispatcher {
     /**
      * @return string
      */
-    private function getActionName(): string {
+    public function getActionName(): string {
         if (empty($this->request['a'])) {
 
             return $this->defaultAction;

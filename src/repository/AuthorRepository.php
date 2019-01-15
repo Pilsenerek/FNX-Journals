@@ -31,6 +31,34 @@ class AuthorRepository extends RepositoryAbstract {
 
         return $authors;
     }
+    
+    /**
+     * @param int $id
+     * @return Author
+     */
+    public function getAuthorById(int $id): Author {
+        $query = $this->pdo->prepare("select * from author where id=?");
+        $query->execute([$id]);
+        $author = $this->createAuthorModel($query->fetchObject());
+
+        return $author;
+    }
+    
+    
+    /**
+     * @return array
+     */
+    public function getAuthors(): array {
+        $rawQuery = "select * from author";
+        $query = $this->pdo->prepare($rawQuery);
+        $query->execute();
+        $authors = [];
+        while ($stdClass = $query->fetchObject()) {
+            $authors[] = $this->createAuthorModel($stdClass);
+        }
+
+        return $authors;
+    }
 
     /**
      * @param stdClass $stdClass

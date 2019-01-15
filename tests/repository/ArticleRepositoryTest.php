@@ -9,13 +9,39 @@ use App\Repository\ArticleRepository;
 use App\Repository\AuthorRepository;
 use App\Repository\CategoryRepository;
 use App\Repository\TagRepository;
+use Mockery;
 use PDO;
 use PDOException;
+use PDOStatement;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
 class ArticleRepositoryTest extends TestCase {
 
+    public function setUp() {
+        Mockery::mock('overload:'.AuthorRepository::class)
+                ->shouldReceive('getAuthorsByArticleId')
+                ->once()
+                ->andReturn([$this->createMock(\App\Model\Author::class)])
+        ;
+        
+        Mockery::mock('overload:'.CategoryRepository::class)
+                ->shouldReceive('getCategoryById')
+                ->times()
+                ->andReturn($this->createMock(\App\Model\Category::class))
+        ;
+        
+        Mockery::mock('overload:'.TagRepository::class)
+                ->shouldReceive('getTagsByArticleId')
+                ->once()
+                ->andReturn([$this->createMock(\App\Model\Tag::class)])
+        ;
+    }
+    
+    /**
+    * @runInSeparateProcess
+    * @preserveGlobalState disabled
+    */   
     public function testGetArticleById() {
         $articleRepository = $this->getArticleRepository();
         $this->assertInstanceOf(Article::class, $articleRepository->getArticleById(999));
@@ -25,6 +51,10 @@ class ArticleRepositoryTest extends TestCase {
         $this->assertInstanceOf(Article::class, $articleRepository->getArticleById(999));
     }
 
+    /**
+    * @runInSeparateProcess
+    * @preserveGlobalState disabled
+    */   
     public function testGetArticles() {
         $articleRepository = $this->getArticleRepository(true);
         $this->assertInstanceOf(Article::class, $articleRepository->getArticles()[0]);
@@ -36,64 +66,14 @@ class ArticleRepositoryTest extends TestCase {
         $articleRepository = $this->getArticleRepository(true);
         $this->assertInstanceOf(Article::class, $articleRepository->getArticles(['tag_id' => 'wefwef wefwf'])[0]);
     }
-
-    public function testNoCategoryRepository() {
-        $this->noRepository('getCategoryRepository');
-    }
-
-    public function testNoAuthorRepository() {
-        $this->noRepository('getAuthorRepository');
-    }
-
-    public function testNoTagRepository() {
-        $this->noRepository('getTagRepository');
-    }
-
-    public function testConstructorWithPdo() {
-        $articleRepository = new ArticleRepository(new \PDO('sqlite::memory:'));
-        $this->assertInstanceOf(ArticleRepository::class, $articleRepository);
-    }
-
-    private function noRepository($method) {
-        try {
-            $this->assertInstanceOf(\App\RepositoryAbstract::class, $this->getPureArticleRepository()->$method());
-        } catch (PDOException $exc) {
-            $this->expectException(PDOException::class);
-            $this->getPureArticleRepository()->$method();
-        }
-    }
-
-    private function getPureArticleRepository() {
-        $articleRepository = $this->getMockBuilder(ArticleRepository::class)
-                ->setMethods(null)
-                ->disableOriginalConstructor()
-                ->getMock()
-        ;
-
-        return $articleRepository;
-    }
-
+    
     private function getArticleRepository($manyArticles = false, $withCategory = true): ArticleRepository {
-        $articleRepository = $this->getMockBuilder(ArticleRepository::class)
-                ->setMethods(['getAuthorRepository', 'getTagRepository', 'getCategoryRepository'])
-                ->disableOriginalConstructor()
-                ->getMock()
-        ;
-
-        $mockedCategoryRepository = $this->getMockBuilder(CategoryRepository::class)->disableOriginalConstructor()->getMock();
-        $articleRepository->expects($this->any())->method('getCategoryRepository')->willReturn($mockedCategoryRepository);
-
-        $mockedAuthorRepository = $this->getMockBuilder(AuthorRepository::class)->disableOriginalConstructor()->getMock();
-        $articleRepository->expects($this->any())->method('getAuthorRepository')->willReturn($mockedAuthorRepository);
-
-        $mockedTagRepository = $this->getMockBuilder(TagRepository::class)->disableOriginalConstructor()->getMock();
-        $articleRepository->expects($this->any())->method('getTagRepository')->willReturn($mockedTagRepository);
-
-        $articleRepository->setPdo($this->getMockedPDO($manyArticles, $withCategory));
+        $pdo = $this->getMockedPDO($manyArticles, $withCategory);
+        $articleRepository = new ArticleRepository($pdo);
 
         return $articleRepository;
     }
-
+    
     protected function getMockedPDO($manyArticles, $withCategory) {
         $mockedReturn = new stdClass();
         $mockedReturn->id = 123;
@@ -108,7 +88,7 @@ class ArticleRepositoryTest extends TestCase {
         $mockedReturn->short_description = 'éfwef wefwef wefwe';
 
         $mockedExecute = $this
-                ->getMockBuilder(\PDOStatement::class)
+                ->getMockBuilder(PDOStatement::class)
                 ->setMethods(['execute', 'fetchObject'])
                 ->getMock()
         ;
@@ -141,4 +121,8 @@ class ArticleRepositoryTest extends TestCase {
         return $mockedPDO;
     }
 
+    public function tearDown() {
+        
+        Mockery::close();
+    }
 }

@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Repository\ArticleRepository;
+use App\Repository\AuthorRepository;
+use App\Repository\CategoryRepository;
+use App\Repository\TagRepository;
 
 /**
  * @todo split controller into pieces like article, user etc.
@@ -11,6 +14,26 @@ use App\Repository\ArticleRepository;
  * @author Michal Zbieranek
  */
 class IndexController {
+
+    
+    /** @var ArticleRepository */
+    private $articleRepository;
+    
+    /** @var CategoryRepository */
+    private $categoryRepository;
+    
+    /** @var AuthorRepository */
+    private $authorRepository;
+    
+    /** @var TagRepository */
+    private $tagRepository;
+
+    public function __construct() {
+        $this->articleRepository = new ArticleRepository();
+        $this->categoryRepository = new CategoryRepository();
+        $this->authorRepository = new AuthorRepository();
+        $this->tagRepository = new TagRepository();
+    }
 
     /**
      * @return array
@@ -23,7 +46,31 @@ class IndexController {
         ];
         $filter = array_intersect_key($_REQUEST, array_flip($filterLists));
         $data = [
-            'articles' => $this->getArticleRepository()->getArticles($filter),
+            'articles' => $this->articleRepository->getArticles($filter),
+        ];
+
+        return $data;
+    }
+
+    /**
+     * @return array
+     */
+    public function authorsAction(): array {
+        $data = [
+            'authors' => $this->authorRepository->getAuthors()
+        ];
+
+        return $data;
+    }
+    
+    /**
+     * @return array
+     */
+    public function authorDetailAction(): array {
+        $authorId = (int) $_REQUEST['author_id'];
+        $data = [
+            'author' => $this->authorRepository->getAuthorById($authorId),
+            'articles' => $this->articleRepository->getArticles(['author_id' => $authorId]),
         ];
 
         return $data;
@@ -34,17 +81,31 @@ class IndexController {
      */
     public function articleAction(): array {
         $articleId = (int) $_REQUEST['id'];
-        $article = $this->getArticleRepository()->getArticleById($articleId);
+        $article = $this->articleRepository->getArticleById($articleId);
 
         return ['article' => $article];
     }
 
     /**
-     * @return ArticleRepository
+     * @return array
      */
-    public function getArticleRepository(): ArticleRepository {
+    public function categoriesAction(): array {
+        $data = [
+            'categories' => $this->categoryRepository->getCategories(),
+        ];
 
-        return new ArticleRepository();
+        return $data;
     }
+    
+    /**
+     * @return array
+     */
+    public function tagsAction(): array {
+        $data = [
+            'tags' => $this->tagRepository->getTagsOrderByPopularity(),
+        ];
 
+        return $data;
+    }
+    
 }

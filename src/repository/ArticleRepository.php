@@ -17,6 +17,23 @@ use stdClass;
  * @author Michal Zbieranek
  */
 class ArticleRepository extends RepositoryAbstract {
+    
+    /** AuthorRepository */
+    private $authorRepository;
+    
+    /** TagRepository */
+    private $tagRepository;
+    
+    /** CategoryRepository */
+    private $categoryRepository;
+    
+    public function __construct(\PDO $pdo = null) {
+        parent::__construct($pdo);
+        
+        $this->authorRepository = new AuthorRepository();
+        $this->tagRepository = new TagRepository();
+        $this->categoryRepository = new CategoryRepository();
+    }
 
     /**
      * @param int $id
@@ -116,7 +133,7 @@ class ArticleRepository extends RepositoryAbstract {
      */
     private function fetchCategory(int $categoryId): Category {
 
-        return $this->getCategoryRepository()->getCategoryById($categoryId);
+        return $this->categoryRepository->getCategoryById($categoryId);
     }
 
     /**
@@ -125,7 +142,7 @@ class ArticleRepository extends RepositoryAbstract {
      */
     private function fetchAuthors(int $articleId): array {
 
-        return $this->getAuthorRepository()->getAuthorsByArticleId($articleId);
+        return $this->authorRepository->getAuthorsByArticleId($articleId);
     }
 
     /**
@@ -134,31 +151,7 @@ class ArticleRepository extends RepositoryAbstract {
      */
     private function fetchTags(int $articleId): array {
 
-        return $this->getTagRepository()->getTagsByArticleId($articleId);
-    }
-
-    /**
-     * @return AuthorRepository
-     */
-    public function getAuthorRepository(): AuthorRepository {
-
-        return new AuthorRepository();
-    }
-
-    /**
-     * @return TagRepository
-     */
-    public function getTagRepository(): TagRepository {
-
-        return new TagRepository();
-    }
-
-    /**
-     * @return TagRepository
-     */
-    public function getCategoryRepository(): CategoryRepository {
-
-        return new CategoryRepository();
+        return $this->tagRepository->getTagsByArticleId($articleId);
     }
 
 }

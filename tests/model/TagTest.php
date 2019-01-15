@@ -14,6 +14,8 @@ class TagTest extends TestCase
         $this->assertInstanceOf(Tag::class, $tag);
         $this->assertIsString($tag->getName());
         $this->assertIsInt($tag->getId());
+        $tag->setNumberOfArticles(999);
+        $this->assertIsInt($tag->getNumberOfArticles());
     }
     
     private function getTag(){

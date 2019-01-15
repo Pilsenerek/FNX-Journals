@@ -23,6 +23,21 @@ class CategoryRepository extends RepositoryAbstract {
 
         return $category;
     }
+    
+    /**
+     * @return array
+     */
+    public function getCategories(): array {
+        $rawQuery = "select * from category";
+        $query = $this->pdo->prepare($rawQuery);
+        $query->execute();
+        $categories = [];
+        while ($stdClass = $query->fetchObject()) {
+            $categories[] = $this->createCategoryModel($stdClass);
+        }
+
+        return $categories;
+    }
 
     /**
      * @param stdClass $stdClass

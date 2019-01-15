@@ -28,12 +28,4 @@ abstract class RepositoryAbstract {
         }
     }
 
-    /**
-     * @param PDO $pdo
-     * @return void
-     */
-    public function setPdo(PDO $pdo): void {
-        $this->pdo = $pdo;
-    }
-
 }

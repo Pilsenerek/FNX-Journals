@@ -10,23 +10,26 @@ use PHPUnit\Framework\TestCase;
 class AuthorRepositoryTest extends TestCase {
 
     public function testGetAuthorsByArticleId() {
-        $mock = $this->getMockedAuthorRepository();
+        $mock = $this->getMockedAuthorRepository(true);
         $this->assertInstanceOf(\App\Model\Author::class, $mock->getAuthorsByArticleId(999)[0]);
     }
-
-    public function testConstructorWithPdo(){
-        $authorRepository = new AuthorRepository(new \PDO('sqlite::memory:'));
-        $this->assertInstanceOf(AuthorRepository::class, $authorRepository);
+    
+    public function testGetAuthors() {
+        $mock = $this->getMockedAuthorRepository(true);
+        $this->assertInstanceOf(\App\Model\Author::class, $mock->getAuthors(999)[0]);
     }
     
-    private function getMockedAuthorRepository(){
-        $mock = $this->getMockBuilder(AuthorRepository::class)->setMethods(null)->disableOriginalConstructor()->getMock();
-        $mock->setPdo($this->getMockedPDO());
-
-        return $mock;
+    public function testGetAuthorById() {
+        $mock = $this->getMockedAuthorRepository();
+        $this->assertInstanceOf(\App\Model\Author::class, $mock->getAuthorById(999));
+    }
+    
+    private function getMockedAuthorRepository($many = false){
+        
+        return new AuthorRepository($this->getMockedPDO($many));
     }
 
-    private function getMockedPDO() {
+    private function getMockedPDO($many) {
         $mockedReturn = new \stdClass();
         $mockedReturn->id = 123;
         $mockedReturn->first_name = 'egehtrhegth';
@@ -46,10 +49,12 @@ class AuthorRepositoryTest extends TestCase {
                 ->expects($this->at(1))->method('fetchObject')
                 ->willReturn($mockedReturn)
         ;
-        $mockedExecute
-                ->expects($this->at(2))->method('fetchObject')
-                ->willReturn(false)
-        ;
+        if ($many) {
+            $mockedExecute
+                    ->expects($this->at(2))->method('fetchObject')
+                    ->willReturn(false)
+            ;
+        }
 
         $mockedPDO = $this->getMockBuilder(\PDO::class)
                 ->disableOriginalConstructor()

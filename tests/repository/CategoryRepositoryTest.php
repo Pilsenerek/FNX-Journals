@@ -13,17 +13,15 @@ class CategoryRepositoryTest extends TestCase {
         $mock = $this->getMockedCategryRepository();
         $this->assertInstanceOf(\App\Model\Category::class, $mock->getCategoryById(999));
     }
-
-    private function getMockedCategryRepository(){
-        $mock = $this->getMockBuilder(CategoryRepository::class)->setMethods(null)->disableOriginalConstructor()->getMock();
-        $mock->setPdo($this->getMockedPDO());
-
-        return $mock;
+    
+    public function testGetCategories() {
+        $mock = $this->getMockedCategryRepository();
+        $this->assertInstanceOf(\App\Model\Category::class, $mock->getCategories()[0]);
     }
 
-    public function testConstructorWithPdo(){
-        $categoryRepository = new CategoryRepository(new \PDO('sqlite::memory:'));
-        $this->assertInstanceOf(CategoryRepository::class, $categoryRepository);
+    private function getMockedCategryRepository(){
+        
+        return new CategoryRepository($this->getMockedPDO());
     }
     
     private function getMockedPDO() {
