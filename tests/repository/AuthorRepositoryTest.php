@@ -9,16 +9,25 @@ use PHPUnit\Framework\TestCase;
 
 class AuthorRepositoryTest extends TestCase {
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testGetAuthorsByArticleId() {
         $mock = $this->getMockedAuthorRepository(true);
         $this->assertInstanceOf(\App\Model\Author::class, $mock->getAuthorsByArticleId(999)[0]);
     }
     
+    /**
+     * @runInSeparateProcess
+     */
     public function testGetAuthors() {
         $mock = $this->getMockedAuthorRepository(true);
         $this->assertInstanceOf(\App\Model\Author::class, $mock->getAuthors(999)[0]);
     }
     
+    /**
+     * @runInSeparateProcess
+     */
     public function testGetAuthorById() {
         $mock = $this->getMockedAuthorRepository();
         $this->assertInstanceOf(\App\Model\Author::class, $mock->getAuthorById(999));

@@ -13,9 +13,19 @@ class Config {
     /** @var [] */
     private $config = [
         'db' => [
-            'dsn' => 'mysql:host=127.0.0.1;port=3306;dbname=fnx_journals',
+            'dsn' => 'mysql:host=127.0.0.1;port=3306;dbname=fnx_journals_22',
             'username' => 'root',
             'password' => '',
+        ],
+        'firewall' => [
+            'loginUrl' => '?a=login',
+            //these controllers & actions are before firewall, rest of all are behind
+            //when there are no actions all of them are before firewall
+            'anonymous' => [
+                'IndexController' => [
+                    'loginAction',
+                ],
+            ],
         ],
     ];
 

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Auth;
 use App\Repository\ArticleRepository;
 use App\Repository\AuthorRepository;
 use App\Repository\CategoryRepository;
@@ -27,12 +28,16 @@ class IndexController {
     
     /** @var TagRepository */
     private $tagRepository;
+    
+    /** @var Auth */
+    private $auth;
 
     public function __construct() {
         $this->articleRepository = new ArticleRepository();
         $this->categoryRepository = new CategoryRepository();
         $this->authorRepository = new AuthorRepository();
         $this->tagRepository = new TagRepository();
+        $this->auth = new Auth();
     }
 
     /**
@@ -108,4 +113,32 @@ class IndexController {
         return $data;
     }
     
+    /**
+     * @return array
+     */
+    public function loginAction() {
+        if (empty($_POST)) {
+
+            return [];
+        } else {
+            $user = $this->auth->authenticate($_POST['username'], $_POST['password']);
+            if ($user) {
+                header('Location: ' . '/');
+            } else {
+
+                return ['error' => true];
+            }
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function logoutAction() : void {
+        if ($this->auth->logout()) {
+
+            header('Location: ' . '/?a=login');
+        }
+    }
+
 }

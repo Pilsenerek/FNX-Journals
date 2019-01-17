@@ -14,18 +14,27 @@ use stdClass;
 
 class TagRepositoryTest extends TestCase {
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testGetTagsByArticleId() {
         $mock = $this->getMockedTagRepository();
         
         $this->assertInstanceOf(Tag::class, $mock->getTagsByArticleId(999)[0]);
     }
     
+    /**
+     * @runInSeparateProcess
+     */
     public function testGetTagsOrderByPopularity() {
         $mock = $this->getMockedTagRepository();
         
         $this->assertInstanceOf(Tag::class, $mock->getTagsOrderByPopularity(999)[0]);
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testNoDBConnection() {
         try {
             $this->assertInstanceOf(RepositoryAbstract::class, new TagRepository());

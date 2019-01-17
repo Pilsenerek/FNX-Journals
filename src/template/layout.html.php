@@ -35,6 +35,23 @@
                     </li>
                 </ul>
             </div>
+            <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+                <ul class="navbar-nav ml-auto">
+                    <?php if (empty($_user)): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/?a=login">
+                                <span class="far fa-user mr-2"></span>Login
+                            </a>
+                        </li>
+                    <?php else: ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/?a=logout">
+                                <span class="fa fa-user mr-2"></span>Logout
+                            </a>
+                        </li>
+                    <?php endif ?>
+                </ul>
+            </div>
         </nav>
 
         <div class="container-fluid mt-5">

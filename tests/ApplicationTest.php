@@ -10,16 +10,17 @@ use PHPUnit\Framework\TestCase;
 class ApplicationTest extends TestCase
 {
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testRun() {
+        \Mockery::mock('overload:'.Dispatcher::class)->shouldReceive('dispatch')->once()->andReturn('<html>Some page</html>');
         $this->assertStringContainsString("<html>", $this->getApplication()->run());
         $this->assertStringContainsString("<html>", (string)$this->getApplication());
     }
 
     private function getApplication(): Application {
         $application = new Application();
-        $dispatcher = $this->createMock(Dispatcher::class);
-        $dispatcher->expects($this->any())->method('dispatch')->willReturn('<html>Some page</html>');
-        $application->setDispatcher($dispatcher);
         
         return $application;
     }

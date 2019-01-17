@@ -19,6 +19,8 @@ class DispatcherTest extends TestCase
     */  
     public function testDispatch() {
         //default page
+        Mockery::mock('overload:'. \App\Auth::class)->shouldReceive('firewall')->once()->andReturn(null);
+        Mockery::mock('overload:'. \App\View::class)->shouldReceive('render')->once()->andReturn('<html>wefwefwefwf</html>');
         $dispatcher = new Dispatcher();
        // $this->expectException(\Exception::class);
         Mockery::mock('overload:'.\App\Repository\ArticleRepository::class)->shouldReceive('getArticles')->once()->andReturn([]);
@@ -35,6 +37,7 @@ class DispatcherTest extends TestCase
     public function testDispatchBadAction() {
         $_REQUEST['c'] = 'index';
         $_REQUEST['a'] = 'testwefwe';
+        Mockery::mock('overload:'. \App\Auth::class);
         $dispatcher = new Dispatcher();
         $this->expectException(\Exception::class);
         Mockery::mock('overload:'.\App\Repository\ArticleRepository::class);
@@ -48,12 +51,8 @@ class DispatcherTest extends TestCase
         $_REQUEST['c'] = 'weffffwfwff';
         $_REQUEST['a'] = 'testwefwe';
         $this->expectException(\Exception::class);
+        Mockery::mock('overload:'. \App\Auth::class);
         $dispatcher = new Dispatcher();
         $dispatcher->dispatch();       
-    }
-
-    public function tearDown() {
-        
-        Mockery::close();
     }
 }

@@ -11,6 +11,15 @@ namespace App;
  */
 class View {
 
+    
+    /** array */
+    private $globalVariables = [];
+    
+    private function addGlobalVariables(){
+        $auth = new Auth;
+        $this->globalVariables['_user'] = $auth->getUser();
+    }
+    
     /**
      * Forward variables into templates and shows it
      * 
@@ -19,7 +28,10 @@ class View {
      */
     public function render(string $controller, string $action, array $data = []): string {
         ob_start();
+        $this->addGlobalVariables();
+        $data = array_merge($this->globalVariables, $data);
         $_content = $this->renderTemplate($controller, $action, $data);
+        extract($this->globalVariables);
         include 'template' . DIRECTORY_SEPARATOR . 'layout.html.php';
 
         return ob_get_clean();

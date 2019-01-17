@@ -14,22 +14,28 @@ use Exception;
  */
 class Dispatcher {
 
-    /** @var array * */
+    /** @var array */
     private $request = [];
 
-    /** @var string * */
+    /** @var string */
     private $defaultController = 'IndexController';
 
-    /** @var string * */
+    /** @var string */
     private $defaultAction = 'indexAction';
 
-    /** @var View * */
+    /** @var View */
     private $view;
+    
+    /** Auth */
+    private $auth;
 
+    /**
+     * @param stdClass $config
+     */
     public function __construct() {
-
         $this->request = $_REQUEST;
         $this->view = new View();
+        $this->auth = new Auth();
     }
 
     /**
@@ -41,6 +47,7 @@ class Dispatcher {
         $controller = $this->getControllerInstance();
         $action = $this->getActionName();
         if (method_exists($controller, $action)) {
+            $this->auth->firewall($this->getControllerName(), $this->getActionName());
 
             return $this->view->render($this->getControllerName(), $action, $controller->$action());
         } else {
@@ -85,7 +92,7 @@ class Dispatcher {
             return $this->defaultAction;
         } else {
 
-            return ucfirst($this->request['a']) . 'Action';
+            return $this->request['a'] . 'Action';
         }
     }
 

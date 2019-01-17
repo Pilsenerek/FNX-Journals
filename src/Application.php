@@ -19,22 +19,18 @@ class Application {
         $this->dispatcher = new Dispatcher();
     }
 
+    private function boot(): void {
+        //@todo find better way to mock this function
+        @session_start();
+    }
+
     /**
      * @return string
      */
     public function run(): string {
+        $this->boot();
 
         return $this->dispatcher->dispatch();
-    }
-
-    /**
-     * @param \App\Dispatcher $dispatcher
-     * @return \App\Application
-     */
-    public function setDispatcher(Dispatcher $dispatcher): Application {
-        $this->dispatcher = $dispatcher;
-
-        return $this;
     }
 
     public function __toString(): string {
