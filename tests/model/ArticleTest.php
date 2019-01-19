@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Test\Model;
 
 use App\Model\Article;
-use App\Model\Author;
 use App\Model\Category;
 use PHPUnit\Framework\TestCase;
 
@@ -23,6 +22,9 @@ class ArticleTest extends TestCase
         $this->assertIsArray($article->getTags());
         $this->assertIsString($article->getTitle());
         $this->assertIsArray($article->getUsers());
+        $this->assertFalse($article->isFree());
+        $article->setPrice(0);
+        $this->assertTrue($article->isFree());
     }
     
     private function getArticle(){

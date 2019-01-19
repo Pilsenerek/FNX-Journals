@@ -3,7 +3,15 @@ declare(strict_types=1);
 
 namespace App\Test;
 
+use App\Auth;
 use App\Dispatcher;
+use App\Repository\ArticleRepository;
+use App\Repository\AuthorRepository;
+use App\Repository\CategoryRepository;
+use App\Repository\TagRepository;
+use App\Repository\UserRepository;
+use App\View;
+use Exception;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 
@@ -19,14 +27,14 @@ class DispatcherTest extends TestCase
     */  
     public function testDispatch() {
         //default page
-        Mockery::mock('overload:'. \App\Auth::class)->shouldReceive('firewall')->once()->andReturn(null);
-        Mockery::mock('overload:'. \App\View::class)->shouldReceive('render')->once()->andReturn('<html>wefwefwefwf</html>');
+        Mockery::mock('overload:'. Auth::class)->shouldReceive('firewall')->once()->andReturn(null);
+        Mockery::mock('overload:'. View::class)->shouldReceive('render')->once()->andReturn('<html>wefwefwefwf</html>');
         $dispatcher = new Dispatcher();
-       // $this->expectException(\Exception::class);
-        Mockery::mock('overload:'.\App\Repository\ArticleRepository::class)->shouldReceive('getArticles')->once()->andReturn([]);
-        Mockery::mock('overload:'.\App\Repository\AuthorRepository::class);
-        Mockery::mock('overload:'. \App\Repository\CategoryRepository::class);
-        Mockery::mock('overload:'. \App\Repository\TagRepository::class);
+        Mockery::mock('overload:'.ArticleRepository::class)->shouldReceive('getArticles')->once()->andReturn([]);
+        Mockery::mock('overload:'.AuthorRepository::class);
+        Mockery::mock('overload:'. CategoryRepository::class);
+        Mockery::mock('overload:'. TagRepository::class);
+        Mockery::mock('overload:' . UserRepository::class);
         $this->assertStringContainsString('<html>', $dispatcher->dispatch());
     }
     
@@ -37,21 +45,22 @@ class DispatcherTest extends TestCase
     public function testDispatchBadAction() {
         $_REQUEST['c'] = 'index';
         $_REQUEST['a'] = 'testwefwe';
-        Mockery::mock('overload:'. \App\Auth::class);
+        Mockery::mock('overload:'. Auth::class);
         $dispatcher = new Dispatcher();
-        $this->expectException(\Exception::class);
-        Mockery::mock('overload:'.\App\Repository\ArticleRepository::class);
-        Mockery::mock('overload:'.\App\Repository\AuthorRepository::class);
-        Mockery::mock('overload:'. \App\Repository\CategoryRepository::class);
-        Mockery::mock('overload:'. \App\Repository\TagRepository::class);
+        $this->expectException(Exception::class);
+        Mockery::mock('overload:'.ArticleRepository::class);
+        Mockery::mock('overload:'.AuthorRepository::class);
+        Mockery::mock('overload:'. CategoryRepository::class);
+        Mockery::mock('overload:'. TagRepository::class);
+        Mockery::mock('overload:' . UserRepository::class);
         $dispatcher->dispatch();
     }   
     
     public function testDispatchBadAll(){
         $_REQUEST['c'] = 'weffffwfwff';
         $_REQUEST['a'] = 'testwefwe';
-        $this->expectException(\Exception::class);
-        Mockery::mock('overload:'. \App\Auth::class);
+        $this->expectException(Exception::class);
+        Mockery::mock('overload:'. Auth::class);
         $dispatcher = new Dispatcher();
         $dispatcher->dispatch();       
     }

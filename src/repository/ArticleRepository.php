@@ -92,6 +92,7 @@ class ArticleRepository extends RepositoryAbstract {
         $relatedFields = [
             'author_id' => 'id in(select article_id from article_has_author where author_id=:author_id)',
             'tag_id' => 'id in(select article_id from article_has_tag where tag_id=:tag_id)',
+            'user_id' => 'id in(select article_id from article_has_user where user_id=:user_id)',
         ];
         foreach ($filter as $field => $value) {
             if (array_key_exists($field, $relatedFields)) {

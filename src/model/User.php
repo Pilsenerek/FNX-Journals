@@ -22,6 +22,9 @@ class User {
     /** $var float */
     private $wallet;
 
+    /**  $var array */
+    private $articles;
+    
     /**
      * @return int
      */
@@ -92,6 +95,65 @@ class User {
         $this->wallet = $wallet;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getArticles(): array {
+
+        return $this->articles;
+    }
+
+    /**
+     * @param array $articles
+     * @return User
+     */
+    public function setArticles(array $articles): User {
+        $this->articles = $articles;
+
+        return $this;
+    }
+    
+    /**
+     * @param Article $article
+     * @return User
+     */
+    public function addArticle(Article $article): User {
+        if (!$this->hasArticle($article)) {
+
+            $this->articles[] = $article;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Article $article
+     * @return bool
+     */
+    public function hasArticle(Article $article): bool {
+        foreach ($this->articles as $ownArticle) {
+            if ($article->getId() == $ownArticle->getId()) {
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
+    /**
+     * @param Article $article
+     * @return bool
+     */
+    public function canAfford(Article $article): bool {
+        if ($article->getPrice() <= $this->wallet) {
+
+            return true;
+        }
+
+        return false;
     }
 
 }

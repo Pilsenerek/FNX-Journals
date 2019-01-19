@@ -68,6 +68,25 @@ class AuthTest extends TestCase
         $this->assertTrue($auth->logout());
     }
     
+    /**
+     * @runInSeparateProcess
+     */    
+    public function testRefresh(){
+        $user = $this->createMock(User::class);
+        $_SESSION['user'] = $user;
+        Mockery::mock('overload:'. UserRepository::class)->shouldReceive('getUserById')->once()->andReturn($user);
+        $auth = new Auth();
+        $this->assertInstanceOf(User::class, $auth->refresh());
+    }
+    
+    /**
+     * @runInSeparateProcess
+     */    
+    public function testRefreshFail(){
+        Mockery::mock('overload:'. UserRepository::class)->shouldReceive('getUserById')->once()->andReturn(null);
+        $auth = new Auth();
+        $this->assertNull($auth->refresh());
+    }
     
     /**
      * @runInSeparateProcess

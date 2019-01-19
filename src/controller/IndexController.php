@@ -8,6 +8,8 @@ use App\Repository\ArticleRepository;
 use App\Repository\AuthorRepository;
 use App\Repository\CategoryRepository;
 use App\Repository\TagRepository;
+use App\Repository\UserRepository;
+use Exception;
 
 /**
  * @todo split controller into pieces like article, user etc.
@@ -31,6 +33,9 @@ class IndexController {
     
     /** @var Auth */
     private $auth;
+    
+   /** @var UserRepository */
+    private $userRepository;
 
     public function __construct() {
         $this->articleRepository = new ArticleRepository();
@@ -38,6 +43,7 @@ class IndexController {
         $this->authorRepository = new AuthorRepository();
         $this->tagRepository = new TagRepository();
         $this->auth = new Auth();
+        $this->userRepository = new UserRepository();
     }
 
     /**
@@ -139,6 +145,23 @@ class IndexController {
 
             header('Location: ' . '/?a=login');
         }
+    }
+
+    /**
+     * @return void
+     */
+    public function buyAction(): void {
+        $articleId = (int) $_REQUEST['article_id'];
+        $urlBack = $_REQUEST['url_back'];
+        $user = $this->auth->getUser();
+        $article = $this->articleRepository->getArticleById($articleId);
+        if ($article->isFree() || !$user->canAfford($article)) {
+
+            throw new Exception('You can not buy this article');
+        }
+        $this->userRepository->buyArticle($article, $user);
+        $this->auth->refresh();
+        header('Location: ' . $urlBack);
     }
 
 }

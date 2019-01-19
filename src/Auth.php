@@ -75,6 +75,20 @@ class Auth {
         
         return $_SESSION['user'] ?? null;
     }
+
+    /**
+     * @param string $username
+     * @param string $password
+     * @return User|null
+     */
+    public function refresh(): ?User {
+        $user = $this->getUser();
+        if ($user) {
+            $_SESSION['user'] = $this->userRepository->getUserById($user->getId());
+        }
+
+        return $user;
+    }
     
     /**
      * @param string $controllerName

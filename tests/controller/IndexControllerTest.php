@@ -15,6 +15,8 @@ use App\Repository\ArticleRepository;
 use App\Repository\AuthorRepository;
 use App\Repository\CategoryRepository;
 use App\Repository\TagRepository;
+use App\Repository\UserRepository;
+use Exception;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 
@@ -24,6 +26,7 @@ class IndexControllerTest extends TestCase {
 
     public function setUp() {
         $mockedArticle = $this->createMock(Article::class);
+        $mockedArticle->expects($this->any())->method('isFree')->willReturn(false);
         $mockedArticleRepository = Mockery::mock('overload:' . ArticleRepository::class);
         $mockedArticleRepository->shouldReceive('getArticles')->times()->andReturn([$mockedArticle]);
         $mockedArticleRepository->shouldReceive('getArticleById')->times()->andReturn($mockedArticle);
@@ -43,6 +46,8 @@ class IndexControllerTest extends TestCase {
 
         $this->auth = Mockery::mock('overload:' . Auth::class);
         $this->auth->shouldReceive('logout')->times()->andReturn(true);
+        
+        Mockery::mock('overload:' . UserRepository::class)->shouldReceive('buyArticle')->times()->andReturn(true);
     }
 
     public function testIndexAction() {
@@ -56,7 +61,6 @@ class IndexControllerTest extends TestCase {
 
     /**
      * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function testCategoriesAction() {
         $this->assertArrayHasKey('categories', $this->getIndexController()->categoriesAction());
@@ -78,7 +82,6 @@ class IndexControllerTest extends TestCase {
 
     /**
      * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function testLoginAction() {
         //empty post
@@ -95,7 +98,6 @@ class IndexControllerTest extends TestCase {
 
     /**
      * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function testLoginActionFail() {
         $this->auth->shouldReceive('authenticate')->once()->andReturn(null);
@@ -107,13 +109,41 @@ class IndexControllerTest extends TestCase {
 
     /**
      * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function testLogoutAction() {
         $mock = $this->getIndexController();
         $this->assertNull($mock->logoutAction());
     }
 
+    /**
+     * @runInSeparateProcess
+     */
+    public function testBuyAction() {
+        $_REQUEST['article_id'] = 999;
+        $_REQUEST['url_back'] = '/wfefwe?wfwef=wefwef';
+        $mockedUser = $this->createMock(User::class);
+        $mockedUser->expects($this->any())->method('canAfford')->willReturn(true);
+        $this->auth->shouldReceive('getUser')->times()->andReturn($mockedUser);
+        $this->auth->shouldReceive('refresh')->times()->andReturn(null);
+        $this->getIndexController()->buyAction();
+        $this->assertNull($this->getIndexController()->buyAction());
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testBuyActionFail() {
+        $_REQUEST['article_id'] = 999;
+        $_REQUEST['url_back'] = '/wfefwe?wfwef=wefwef';
+        $mockedUser = $this->createMock(User::class);
+        $mockedUser->expects($this->any())->method('canAfford')->willReturn(false);
+        $this->auth->shouldReceive('getUser')->times()->andReturn($mockedUser);
+        $this->auth->shouldReceive('refresh')->times()->andReturn(null);
+        $this->expectException(Exception::class);
+        $this->getIndexController()->buyAction();
+    }
+
+    
     private function getIndexController(): IndexController {
         $indexController = new IndexController();
 

@@ -1,7 +1,31 @@
 <article>
     <h2><?php echo $article->getTitle() ?></h2>
     <p><?php echo $article->getShortDescription() ?></p>
-    <p><?php echo $article->getContent() ?></p>
+    <?php if ($article->isFree() or $_user->hasArticle($article)): ?>
+        <p><?php echo $article->getContent() ?></p>
+    <?php else: ?>  
+        <?php if ($_user->canAfford($article)): ?>
+        <p>
+            <a 
+                href="/?a=buy&article_id=<?php echo $article->getId() ?>&url_back=<?php echo urlencode('/?a=article&id='.$article->getId())?>"
+                class="btn btn-primary btn-lg"
+                role="button"
+                aria-pressed="true"
+            >
+                <span class="fa fa-cart-plus"></span> Buy this article
+            </a>
+            Your wallet will be <?php echo number_format($_user->getWallet()-$article->getPrice(), 2, ',', ' ') ?> after that
+        </p>
+        <?php else: ?>    
+        <p>
+            <a href="#" class="btn btn-primary btn-lg disabled" role="button" aria-pressed="true">
+                <span class="fa fa-cart-plus"></span> Buy this article
+            </a>
+            Insufficient cash!
+        </p>
+        <?php endif ?>
+    <?php endif ?>
+    
     <div class="row">
         <div class="col">
             <strong>Price:</strong> <?php echo number_format($article->getPrice(), 2, ',', ' ') ?>

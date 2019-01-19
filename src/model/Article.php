@@ -26,7 +26,7 @@ class Article {
     private $content;
 
     /** $var float */
-    private $price;
+    private $price = 0;
 
     /** @var Category */
     private $category = null;
@@ -200,6 +200,18 @@ class Article {
         $this->authors = $authors;
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFree(): bool {
+        if (empty($this->getPrice())) {
+
+            return true;
+        }
+
+        return false;
     }
 
 }

@@ -46,7 +46,8 @@
                     <?php else: ?>
                         <li class="nav-item">
                             <a class="nav-link" href="/?a=logout">
-                                <span class="fa fa-user mr-2"></span>Logout
+                                <span class="fa fa-user mr-2"></span>Logout <?php echo $_user->getUsername() ?>
+                                (<?php echo number_format($_user->getWallet(), 2, ',', ' ') ?> $)
                             </a>
                         </li>
                     <?php endif ?>
