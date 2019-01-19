@@ -14,14 +14,21 @@ use stdClass;
 class AuthTest extends TestCase
 {
 
+    private $userRepository;
+    
+    public function setUp() {
+        $this->userRepository = Mockery::mock('overload:'. UserRepository::class);
+    }
+
     /**
      * @runInSeparateProcess
      */
     public function testFireWall() {
-         Mockery::mock('overload:'. UserRepository::class)->shouldReceive('getUserAuth')->once()->andReturn(new User());
+         $this->userRepository->shouldReceive('getUserAuth')->times()->andReturn(new User());
          
         //sth before firewall
         $_REQUEST['a'] = 'login';
+        $this->mockCfg();
         $auth = new Auth();
         $this->assertNull($auth->firewall('IndexController', 'loginAction'));
         
@@ -29,13 +36,15 @@ class AuthTest extends TestCase
         $_REQUEST['a'] = 'login';
         $auth = new Auth();
         $this->assertNull($auth->firewall('IndexController', 'tagsAction'));
+        //Mockery::close();
     }
 
     /**
      * @runInSeparateProcess
      */    
     public function testGetUser(){
-        Mockery::mock('overload:'. UserRepository::class)->shouldReceive('getUser')->once()->andReturn(null);
+        $this->userRepository->shouldReceive('getUser')->times()->andReturn(null);
+        $this->mockCfg();
         $auth = new Auth();
         $this->assertNull($auth->getUser());
     }
@@ -44,7 +53,8 @@ class AuthTest extends TestCase
      * @runInSeparateProcess
      */    
     public function testAuthenticate(){
-        Mockery::mock('overload:'. UserRepository::class)->shouldReceive('getUserAuth')->once()->andReturn(new User());
+        $this->userRepository->shouldReceive('getUserAuth')->times()->andReturn(new User());
+        $this->mockCfg();
         $auth = new Auth();
         $this->assertInstanceOf(User::class, $auth->authenticate('wefewfewf', 'wefwefwe'));
     }
@@ -53,7 +63,8 @@ class AuthTest extends TestCase
      * @runInSeparateProcess
      */    
     public function testAuthenticateFail(){
-        Mockery::mock('overload:'. UserRepository::class)->shouldReceive('getUserAuth')->once()->andReturn(null);
+        $this->userRepository->shouldReceive('getUserAuth')->times()->andReturn(null);
+        $this->mockCfg();
         $auth = new Auth();
         $this->assertNull($auth->authenticate('wefewfewf', 'wefwefwe'));
     }
@@ -62,7 +73,7 @@ class AuthTest extends TestCase
      * @runInSeparateProcess
      */    
     public function testLogout(){
-        Mockery::mock('overload:'. UserRepository::class);
+        $this->mockCfg();
         $auth = new Auth();
         $_SESSION = [];
         $this->assertTrue($auth->logout());
@@ -74,7 +85,8 @@ class AuthTest extends TestCase
     public function testRefresh(){
         $user = $this->createMock(User::class);
         $_SESSION['user'] = $user;
-        Mockery::mock('overload:'. UserRepository::class)->shouldReceive('getUserById')->once()->andReturn($user);
+        $this->userRepository->shouldReceive('getUserById')->times()->andReturn($user);
+        $this->mockCfg();
         $auth = new Auth();
         $this->assertInstanceOf(User::class, $auth->refresh());
     }
@@ -83,7 +95,9 @@ class AuthTest extends TestCase
      * @runInSeparateProcess
      */    
     public function testRefreshFail(){
-        Mockery::mock('overload:'. UserRepository::class)->shouldReceive('getUserById')->once()->andReturn(null);
+        $_SESSION['user'] = null;
+        $this->userRepository->shouldReceive('getUserById')->times()->andReturn('dupa');
+        $this->mockCfg();
         $auth = new Auth();
         $this->assertNull($auth->refresh());
     }
@@ -92,15 +106,31 @@ class AuthTest extends TestCase
      * @runInSeparateProcess
      */
     public function testFireWallAllActions() {
-        $cfg = new stdClass();
-        $cfg->firewall = new stdClass();
-        $cfg->firewall->anonymous = new stdClass();
-        $cfg->firewall->anonymous->IndexController = [];
-        Mockery::mock('overload:'. Config::class)->shouldReceive('getConfig')->once()->andReturn($cfg);
-        Mockery::mock('overload:'. UserRepository::class);
+        $this->mockCfg(false);
         
         $auth = new Auth();
         $this->assertNull($auth->firewall('IndexController', 'qwerty1234Action'));
+    }
+    
+    private function mockCfg($withLoginAction = true) {
+        $mCfg = Mockery::mock('overload:' . Config::class);
+        $cfg = new stdClass();
+        $cfg->firewall = new stdClass();
+        $cfg->firewall->loginUrl = '?wfwefwf=wfwfwe';
+        $cfg->firewall->anonymous = new stdClass();
+        if ($withLoginAction) {
+            $cfg->firewall->anonymous->IndexController = ['loginAction'];
+        } else {
+            $cfg->firewall->anonymous->IndexController = [];
+        }
+
+        $mCfg->shouldReceive('getConfig')->times()->andReturn($cfg);
+        
+        return $mCfg;
+    }
+
+    protected function tearDown() {
+        Mockery::close();
     }
 
 }

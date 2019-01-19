@@ -55,7 +55,11 @@ class DispatcherTest extends TestCase
         Mockery::mock('overload:' . UserRepository::class);
         $dispatcher->dispatch();
     }   
-    
+
+    /**
+    * @runInSeparateProcess
+    * @preserveGlobalState disabled
+    */      
     public function testDispatchBadAll(){
         $_REQUEST['c'] = 'weffffwfwff';
         $_REQUEST['a'] = 'testwefwe';
@@ -64,4 +68,5 @@ class DispatcherTest extends TestCase
         $dispatcher = new Dispatcher();
         $dispatcher->dispatch();       
     }
+    
 }

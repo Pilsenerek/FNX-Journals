@@ -5,7 +5,6 @@ namespace App;
 
 use App\Model\User;
 use App\Repository\UserRepository;
-use stdClass;
 
 /**
  * @todo move firewall into separate class
