@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model;
@@ -24,7 +25,7 @@ class User {
 
     /**  $var array */
     private $articles;
-    
+
     /**
      * @return int
      */
@@ -114,7 +115,7 @@ class User {
 
         return $this;
     }
-    
+
     /**
      * @param Article $article
      * @return User
@@ -142,7 +143,7 @@ class User {
 
         return false;
     }
-    
+
     /**
      * @param Article $article
      * @return bool

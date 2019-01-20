@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App;
@@ -13,10 +14,10 @@ use App\Repository\UserRepository;
  * @author Michal Zbieranek
  */
 class Auth {
-    
+
     /** stdClass */
     private $config;
-    
+
     /** UserRepository */
     private $userRepository;
 
@@ -31,7 +32,7 @@ class Auth {
      * @param string $actionName
      * @return void
      */
-    public function firewall(string $controllerName, string $actionName) : void {
+    public function firewall(string $controllerName, string $actionName): void {
         if (
                 $this->isBehindFirewall($controllerName, $actionName) &&
                 empty($_SESSION['user'])
@@ -39,7 +40,7 @@ class Auth {
             header('Location: ' . $this->config->loginUrl);
         }
     }
-    
+
     /**
      * @param string $username
      * @param string $password
@@ -57,21 +58,21 @@ class Auth {
     /**
      * @return bool
      */
-    public function logout() : bool {
+    public function logout(): bool {
         //@todo fidn better way to mock session functions
         @session_destroy();
         @session_unset();
         unset($_SESSION['user']);
         $_SESSION = array();
-        
+
         return true;
     }
-    
+
     /**
      * @return User|null
      */
-    public function getUser() : ?User{
-        
+    public function getUser(): ?User {
+
         return $_SESSION['user'] ?? null;
     }
 
@@ -88,7 +89,7 @@ class Auth {
 
         return $user;
     }
-    
+
     /**
      * @param string $controllerName
      * @param string $actionName

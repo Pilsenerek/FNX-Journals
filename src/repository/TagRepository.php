@@ -14,8 +14,8 @@ use stdClass;
 class TagRepository extends RepositoryAbstract {
 
     /**
-     * @param int $id
-     * @return Tag
+     * @param int $articleId
+     * @return array
      */
     public function getTagsByArticleId(int $articleId): array {
         $query = $this->pdo->prepare(
@@ -31,11 +31,11 @@ class TagRepository extends RepositoryAbstract {
 
         return $tags;
     }
-    
+
     /**
-     * @return type
+     * @return array
      */
-    public function getTagsOrderByPopularity(){
+    public function getTagsOrderByPopularity(): array {
         $query = $this->pdo->prepare(
                 "select *,(
                     select count(article_id) 
@@ -60,7 +60,7 @@ class TagRepository extends RepositoryAbstract {
      * @param stdClass $stdClass
      * @return Tag
      */
-    private function createTagModel(stdClass $stdClass) {
+    private function createTagModel(stdClass $stdClass): Tag {
         $tag = new Tag();
         $tag->setId((int) $stdClass->id);
         $tag->setName($stdClass->name);

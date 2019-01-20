@@ -1,8 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Repository
+
 ;
+
 use App\Model\Category;
 use App\RepositoryAbstract;
 use stdClass;
@@ -23,7 +26,7 @@ class CategoryRepository extends RepositoryAbstract {
 
         return $category;
     }
-    
+
     /**
      * @return array
      */
@@ -43,9 +46,9 @@ class CategoryRepository extends RepositoryAbstract {
      * @param stdClass $stdClass
      * @return Category
      */
-    private function createCategoryModel(stdClass $stdClass) {
+    private function createCategoryModel(stdClass $stdClass): Category {
         $category = new Category();
-        $category->setId((int)$stdClass->id);
+        $category->setId((int) $stdClass->id);
         $category->setName($stdClass->name);
 
         return $category;

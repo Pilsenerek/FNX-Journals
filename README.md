@@ -21,3 +21,10 @@ If you don't have this program, install composer from https://getcomposer.org/
 ### 4.1 Prepare MySQL db
 ### 4.2 Run script from /sql/db.sql to fill example data
 ### 4.3 Edit DB setting in /src/Config.php file
+
+## 5 Unit tests
+Run: 
+
+    /vendor/bin/phpunit
+If you don't have xdebug you can install it or skip coverage raport by adding a --no-coverage option.
+Doc: https://phpunit.readthedocs.io/en/7.4/

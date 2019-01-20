@@ -1,7 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App;
+
+use stdClass;
 
 /**
  * @todo implement yaml and add config object into app context
@@ -30,9 +33,9 @@ class Config {
     ];
 
     /**
-     * @return \stdClass
+     * @return stdClass
      */
-    public function getConfig(): \stdClass {
+    public function getConfig(): stdClass {
 
         $cfg = json_decode(json_encode($this->config), false);
 

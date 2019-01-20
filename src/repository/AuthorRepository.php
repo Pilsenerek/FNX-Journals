@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Repository;
@@ -31,7 +32,7 @@ class AuthorRepository extends RepositoryAbstract {
 
         return $authors;
     }
-    
+
     /**
      * @param int $id
      * @return Author
@@ -43,8 +44,7 @@ class AuthorRepository extends RepositoryAbstract {
 
         return $author;
     }
-    
-    
+
     /**
      * @return array
      */
@@ -64,9 +64,9 @@ class AuthorRepository extends RepositoryAbstract {
      * @param stdClass $stdClass
      * @return Author
      */
-    private function createAuthorModel(stdClass $stdClass) {
+    private function createAuthorModel(stdClass $stdClass): Author {
         $author = new Author();
-        $author->setId((int)$stdClass->id);
+        $author->setId((int) $stdClass->id);
         $author->setFirstName($stdClass->first_name);
         $author->setLastName($stdClass->last_name);
         $author->setAbout($stdClass->about);

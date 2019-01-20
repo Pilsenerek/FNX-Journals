@@ -21,7 +21,6 @@ class ArticleTest extends TestCase
         $this->assertIsString($article->getShortDescription());
         $this->assertIsArray($article->getTags());
         $this->assertIsString($article->getTitle());
-        $this->assertIsArray($article->getUsers());
         $this->assertFalse($article->isFree());
         $article->setPrice(0);
         $this->assertTrue($article->isFree());
@@ -38,7 +37,6 @@ class ArticleTest extends TestCase
         $article->setShortDescription('fewfwfwef wfwfwe');
         $article->setTags([]);
         $article->setTitle('wefwefwe wefwefwef');
-        $article->setUsers([]);
         
         return $article;
     }

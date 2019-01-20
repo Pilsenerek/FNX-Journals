@@ -11,15 +11,17 @@ namespace App;
  */
 class View {
 
-    
     /** array */
     private $globalVariables = [];
-    
-    private function addGlobalVariables(){
+
+    /**
+     * @return void
+     */
+    private function addGlobalVariables(): void {
         $auth = new Auth;
         $this->globalVariables['_user'] = $auth->getUser();
     }
-    
+
     /**
      * Forward variables into templates and shows it
      * 

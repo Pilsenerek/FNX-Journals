@@ -17,19 +17,19 @@ use stdClass;
  * @author Michal Zbieranek
  */
 class ArticleRepository extends RepositoryAbstract {
-    
+
     /** AuthorRepository */
     private $authorRepository;
-    
+
     /** TagRepository */
     private $tagRepository;
-    
+
     /** CategoryRepository */
     private $categoryRepository;
-    
+
     public function __construct(\PDO $pdo = null) {
         parent::__construct($pdo);
-        
+
         $this->authorRepository = new AuthorRepository();
         $this->tagRepository = new TagRepository();
         $this->categoryRepository = new CategoryRepository();
@@ -109,7 +109,7 @@ class ArticleRepository extends RepositoryAbstract {
      * @param stdClass $stdClass
      * @return Article
      */
-    private function createArticleModel(stdClass $stdClass) {
+    private function createArticleModel(stdClass $stdClass): Article {
         $article = new Article();
         $article->setId((int) $stdClass->id);
         $article->setAuthors($this->fetchAuthors((int) $stdClass->id));
@@ -121,9 +121,6 @@ class ArticleRepository extends RepositoryAbstract {
         $article->setShortDescription($stdClass->short_description);
         $article->setTags($this->fetchTags((int) $stdClass->id));
         $article->setTitle($stdClass->title);
-
-        //@todo consider whether this relation is necessary
-        //$article->setUsers();
 
         return $article;
     }

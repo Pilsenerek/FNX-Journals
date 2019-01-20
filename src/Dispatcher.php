@@ -25,7 +25,7 @@ class Dispatcher {
 
     /** @var View */
     private $view;
-    
+
     /** Auth */
     private $auth;
 

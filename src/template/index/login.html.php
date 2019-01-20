@@ -3,12 +3,12 @@
 <div class="col-3">
 
     <?php if (!empty($error)): ?>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <strong>Bad username and/or password!</strong> Please try again and don't give up.
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Bad username and/or password!</strong> Please try again and don't give up.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
     <?php endif ?>
 
     <form action="/?a=login" method="POST">

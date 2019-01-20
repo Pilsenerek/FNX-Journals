@@ -15,13 +15,12 @@ use stdClass;
  */
 class UserRepository extends RepositoryAbstract {
 
-
     /** @var ArticleRepository */
     private $articleRepository;
-    
+
     public function __construct(PDO $pdo = null) {
         parent::__construct($pdo);
-        
+
         $this->articleRepository = new ArticleRepository();
     }
 
@@ -40,10 +39,11 @@ class UserRepository extends RepositoryAbstract {
 
             return $this->createUserModel($result);
         } else {
+            
             return null;
         }
     }
-    
+
     /**
      * @param int $id
      * @return User
@@ -61,7 +61,7 @@ class UserRepository extends RepositoryAbstract {
      * @param User $user
      * @return bool
      */
-    public function buyArticle(Article $article, User $user) : bool {
+    public function buyArticle(Article $article, User $user): bool {
         $this->pdo->beginTransaction();
         $newWallet = $user->getWallet() - $article->getPrice();
         $queryUser = $this->pdo->prepare("update user set wallet=? where id=?");
@@ -82,7 +82,7 @@ class UserRepository extends RepositoryAbstract {
      * @param stdClass $stdClass
      * @return User
      */
-    private function createUserModel(stdClass $stdClass) {
+    private function createUserModel(stdClass $stdClass): User {
         $user = new User();
         $user->setId((int) $stdClass->id);
         $user->setUsername($stdClass->username);
@@ -92,13 +92,13 @@ class UserRepository extends RepositoryAbstract {
 
         return $user;
     }
-    
+
     /**
      * @param int $userId
      * @return array
      */
-    private function fetchArticles(int $userId) : array{
-     
+    private function fetchArticles(int $userId): array {
+
         return $this->articleRepository->getArticles(['user_id' => $userId]);
     }
 

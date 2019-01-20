@@ -1,8 +1,8 @@
 <h2>Author <?php echo $author->getFullName() ?> details</h2>
 
-<?php if(!empty($author->getAbout())): ?>
-<h3>About this author</h3>
-<p><?php echo $author->getAbout() ?></p>
+<?php if (!empty($author->getAbout())): ?>
+    <h3>About this author</h3>
+    <p><?php echo $author->getAbout() ?></p>
 <?php endif ?>
 
 <h3>Articles written by <?php echo $author->getFullName() ?></h3>

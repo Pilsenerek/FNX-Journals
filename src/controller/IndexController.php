@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -18,23 +19,22 @@ use Exception;
  */
 class IndexController {
 
-    
     /** @var ArticleRepository */
     private $articleRepository;
-    
+
     /** @var CategoryRepository */
     private $categoryRepository;
-    
+
     /** @var AuthorRepository */
     private $authorRepository;
-    
+
     /** @var TagRepository */
     private $tagRepository;
-    
+
     /** @var Auth */
     private $auth;
-    
-   /** @var UserRepository */
+
+    /** @var UserRepository */
     private $userRepository;
 
     public function __construct() {
@@ -73,7 +73,7 @@ class IndexController {
 
         return $data;
     }
-    
+
     /**
      * @return array
      */
@@ -107,7 +107,7 @@ class IndexController {
 
         return $data;
     }
-    
+
     /**
      * @return array
      */
@@ -118,7 +118,7 @@ class IndexController {
 
         return $data;
     }
-    
+
     /**
      * @return array
      */
@@ -140,7 +140,7 @@ class IndexController {
     /**
      * @return array
      */
-    public function logoutAction() : void {
+    public function logoutAction(): void {
         if ($this->auth->logout()) {
 
             header('Location: ' . '/?a=login');

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use App\Model\Article;
@@ -36,9 +37,6 @@ class Article {
 
     /** array */
     private $tags;
-
-    /** array */
-    private $users;
 
     /**
      * @return int
@@ -107,14 +105,6 @@ class Article {
     }
 
     /**
-     * @return array
-     */
-    public function getUsers(): array {
-
-        return $this->users;
-    }
-
-    /**
      * @param string $title
      * @return Article
      */
@@ -170,16 +160,6 @@ class Article {
      */
     public function setTags($tags): Article {
         $this->tags = $tags;
-
-        return $this;
-    }
-
-    /**
-     * @param type $users
-     * @return Article
-     */
-    public function setUsers($users): Article {
-        $this->users = $users;
 
         return $this;
     }
