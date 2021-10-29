@@ -1,9 +1,5 @@
 <?php
-
 declare(strict_types=1);
-
-use App\Model\Article;
-use App\Model\Category;
 
 namespace App\Model;
 

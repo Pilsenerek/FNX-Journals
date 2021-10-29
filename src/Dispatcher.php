@@ -43,11 +43,15 @@ class Dispatcher {
      * 
      * @return string
      */
-    public function dispatch(): string {
+    public function dispatch(): ?string {
         $controller = $this->getControllerInstance();
         $action = $this->getActionName();
         if (method_exists($controller, $action)) {
             $this->auth->firewall($this->getControllerName(), $this->getActionName());
+            if (is_null($controller->$action())) {
+
+                return null;
+            }
 
             return $this->view->render($this->getControllerName(), $action, $controller->$action());
         } else {

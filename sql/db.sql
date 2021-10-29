@@ -1,104 +1,94 @@
+CREATE DATABASE `fnx` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+
+USE fnx;
+
 SET FOREIGN_KEY_CHECKS=0;
--- ----------------------------
--- Table structure for article
--- ----------------------------
+
+CREATE TABLE `chat` (
+                        `id` int NOT NULL AUTO_INCREMENT,
+                        `username` varchar(255) NOT NULL,
+                        `message` text NOT NULL,
+                        `time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                        `is_read` tinyint(1) NOT NULL DEFAULT '0',
+                        PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
+
 CREATE TABLE `article` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL,
-  `short_description` text,
-  `content` text NOT NULL,
-  `price` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `category_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `article_category_id` (`category_id`),
-  CONSTRAINT `article_category_id` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+                           `id` int(11) NOT NULL AUTO_INCREMENT,
+                           `title` varchar(255) NOT NULL,
+                           `short_description` text,
+                           `content` text NOT NULL,
+                           `price` decimal(10,2) NOT NULL DEFAULT '0.00',
+                           `category_id` int(11) DEFAULT NULL,
+                           PRIMARY KEY (`id`),
+                           KEY `article_category_id` (`category_id`),
+                           CONSTRAINT `article_category_id` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Table structure for article_has_author
--- ----------------------------
 CREATE TABLE `article_has_author` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `article_id` int(11) NOT NULL,
-  `author_id` int(9) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `article_has_author_unique` (`article_id`,`author_id`),
-  KEY `article_has_author_author_id` (`author_id`),
-  CONSTRAINT `article_has_author_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`id`),
-  CONSTRAINT `article_has_author_author_id` FOREIGN KEY (`author_id`) REFERENCES `author` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+                                      `id` int(11) NOT NULL AUTO_INCREMENT,
+                                      `article_id` int(11) NOT NULL,
+                                      `author_id` int(9) NOT NULL,
+                                      PRIMARY KEY (`id`),
+                                      UNIQUE KEY `article_has_author_unique` (`article_id`,`author_id`),
+                                      KEY `article_has_author_author_id` (`author_id`),
+                                      CONSTRAINT `article_has_author_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`id`),
+                                      CONSTRAINT `article_has_author_author_id` FOREIGN KEY (`author_id`) REFERENCES `author` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Table structure for article_has_tag
--- ----------------------------
 CREATE TABLE `article_has_tag` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `article_id` int(11) NOT NULL,
-  `tag_id` int(9) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `article_has_tag_unique` (`article_id`,`tag_id`),
-  KEY `article_has_tag_tag_id` (`tag_id`),
-  CONSTRAINT `article_has_tag_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`id`),
-  CONSTRAINT `article_has_tag_tag_id` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+                                   `id` int(11) NOT NULL AUTO_INCREMENT,
+                                   `article_id` int(11) NOT NULL,
+                                   `tag_id` int(9) NOT NULL,
+                                   PRIMARY KEY (`id`),
+                                   UNIQUE KEY `article_has_tag_unique` (`article_id`,`tag_id`),
+                                   KEY `article_has_tag_tag_id` (`tag_id`),
+                                   CONSTRAINT `article_has_tag_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`id`),
+                                   CONSTRAINT `article_has_tag_tag_id` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Table structure for article_has_user
--- ----------------------------
 CREATE TABLE `article_has_user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(9) NOT NULL,
-  `article_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `article_has_user_unique` (`user_id`,`article_id`),
-  KEY `article_has_user_article_id` (`article_id`),
-  CONSTRAINT `article_has_user_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`id`),
-  CONSTRAINT `article_has_user_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+                                    `id` int(11) NOT NULL AUTO_INCREMENT,
+                                    `user_id` int(9) NOT NULL,
+                                    `article_id` int(11) NOT NULL,
+                                    PRIMARY KEY (`id`),
+                                    UNIQUE KEY `article_has_user_unique` (`user_id`,`article_id`),
+                                    KEY `article_has_user_article_id` (`article_id`),
+                                    CONSTRAINT `article_has_user_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`id`),
+                                    CONSTRAINT `article_has_user_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `author` (
+                          `id` int(9) NOT NULL AUTO_INCREMENT,
+                          `first_name` varchar(255) NOT NULL,
+                          `last_name` varchar(255) NOT NULL,
+                          `about` text,
+                          PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `category` (
+                            `id` int(9) NOT NULL AUTO_INCREMENT,
+                            `name` varchar(255) NOT NULL,
+                            PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tag` (
+                       `id` int(9) NOT NULL AUTO_INCREMENT,
+                       `name` varchar(255) NOT NULL,
+                       PRIMARY KEY (`id`),
+                       UNIQUE KEY `tag_name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `user` (
+                        `id` int(9) NOT NULL AUTO_INCREMENT,
+                        `username` varchar(255) NOT NULL,
+                        `password` varchar(255) NOT NULL,
+                        `wallet` decimal(10,2) NOT NULL DEFAULT '0.00',
+                        PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Table structure for author
--- ----------------------------
-CREATE TABLE `author` (
-  `id` int(9) NOT NULL AUTO_INCREMENT,
-  `first_name` varchar(255) NOT NULL,
-  `last_name` varchar(255) NOT NULL,
-  `about` text,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Table structure for category
--- ----------------------------
-CREATE TABLE `category` (
-  `id` int(9) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Table structure for tag
--- ----------------------------
-CREATE TABLE `tag` (
-  `id` int(9) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `tag_name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Table structure for user
--- ----------------------------
-CREATE TABLE `user` (
-  `id` int(9) NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `wallet` decimal(10,2) NOT NULL DEFAULT '0.00',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records 
+-- Records
 -- ----------------------------
 INSERT INTO `article` VALUES ('1', 'Healthy dish you can preapare quickly', 'Nulla vestibulum nec, dignissim in, cursus molestie. Donec est. Integer neque quis porta nisl. Nam pulvinar, quam molestie ultricies vitae.', 'Lorem ipsum primis in erat consectetuer viverra semper orci, viverra lacinia. Vestibulum aliquam lacinia, risus nunc, placerat ornare dapibus. Aenean et netus et velit. Duis hendrerit magna sapien, tempus ac, dictum sed, vestibulum vehicula. Etiam leo at risus commodo ante. Curabitur elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Morbi sem dolor eu wisi. Suspendisse at lorem non orci. Proin gravida sit amet nunc volutpat a, pellentesque sed, sodales pede. Duis vulputate nunc. Praesent tortor. Donec vitae felis. Mauris leo. Donec molestie a, tellus. Suspendisse at magna. Etiam vestibulum tristique vitae, lectus. Nam suscipit, risus velit, a dolor lacus, congue quis, dictum id, eleifend purus scelerisque odio sit amet felis odio vitae fringilla fringilla eget, nulla. Nunc justo ac posuere cubilia Curae, Sed vehicula wisi, aliquam arcu. Sed feugiat sapien, congue odio non arcu. Nam risus et ultrices iaculis. Curabitur arcu elit, dictum ut, diam.', '0.00', '1');
 INSERT INTO `article` VALUES ('2', 'Germanium-based CPU cores', 'Cum sociis natoque penatibus et ultrices urna, pellentesque tincidunt, velit in dui. Lorem ipsum aliquet elit. Mauris luctus et magnis.', 'Curae, Mauris vel risus. Nulla facilisi. Nullam et lacus a mauris. Nunc ultricies tortor id tortor quis massa ac ipsum. Proin cursus, mi quis viverra elit. Nunc consectetuer adipiscing ornare. Nam molestie. Quisque pharetra, urna ut urna mauris, consectetuer nisl. Fusce mollis, orci a augue. Nam scelerisque pede ac nisl. Morbi fermentum leo facilisis dui ligula, quis eleifend eget, nunc. Nunc velit non sem. Nam lorem eu eros. Pellentesque laoreet metus vitae tellus consectetuer adipiscing quam sagittis eget, bibendum ac, ultricies vehicula, dui gravida vitae, lectus. Curabitur commodo. Curabitur condimentum magna sapien, nec tellus. Quisque nulla. Aenean massa molestie justo euismod scelerisque vel, ipsum. Nunc accumsan at, egestas risus libero, posuere cubilia Curae, In accumsan augue nec turpis quis euismod nibh, dignissim dolor eu elementum quis, ornare at, bibendum porttitor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Curabitur eu dui quis justo. Vestibulum enim.', '1.50', '2');
@@ -154,3 +144,8 @@ INSERT INTO `user` VALUES ('3', 'leonard', 'penny', '5.00');
 INSERT INTO `user` VALUES ('4', 'amy', 'wildebeast', '0.00');
 INSERT INTO `user` VALUES ('5', 'penny', 'leonard', '10.00');
 INSERT INTO `user` VALUES ('6', 'rajesh', 'password', '0.00');
+INSERT INTO `user` VALUES ('7', 'admin', 'admin', '0.00');
+INSERT INTO `user` VALUES ('8', 'ziom', 'ziom', '0.00');
+INSERT INTO `user` VALUES ('9', 'wacek', 'wacek', '0.00');
+
+SET FOREIGN_KEY_CHECKS=1;

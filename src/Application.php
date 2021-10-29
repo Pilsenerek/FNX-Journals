@@ -27,7 +27,7 @@ class Application {
     /**
      * @return string
      */
-    public function run(): string {
+    public function run(): ?string {
         $this->boot();
 
         return $this->dispatcher->dispatch();

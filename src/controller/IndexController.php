@@ -8,6 +8,7 @@ use App\Auth;
 use App\Repository\ArticleRepository;
 use App\Repository\AuthorRepository;
 use App\Repository\CategoryRepository;
+use App\Repository\ChatRepository;
 use App\Repository\TagRepository;
 use App\Repository\UserRepository;
 use Exception;
@@ -37,6 +38,9 @@ class IndexController {
     /** @var UserRepository */
     private $userRepository;
 
+    /** @var ChatRepository */
+    private $chatRepository;
+
     public function __construct() {
         $this->articleRepository = new ArticleRepository();
         $this->categoryRepository = new CategoryRepository();
@@ -44,6 +48,7 @@ class IndexController {
         $this->tagRepository = new TagRepository();
         $this->auth = new Auth();
         $this->userRepository = new UserRepository();
+        $this->chatRepository = new ChatRepository();
     }
 
     /**
@@ -117,6 +122,69 @@ class IndexController {
         ];
 
         return $data;
+    }
+
+    /**
+     * @return array
+     */
+    public function chatAction(): array {
+        $data = [
+            'messages' => $this->chatRepository->getUnreadMessages(),
+        ];
+
+        return $data;
+    }
+
+    public function chatAddMessageAction() {
+        $user = $this->auth->getUser();
+        $this->chatRepository->addMessage($_POST['message'], $user);
+    }
+
+    public function chatSentEventAction() {
+        ob_start();
+        $name = 'chat';
+        $id = 0;
+
+        @ini_set('zlib.output_compression', "0");
+        @ini_set('implicit_flush', "1");
+        @ob_end_clean();
+        set_time_limit(0);
+        header('Content-type: text/event-stream; charset=utf-8');
+        header("Cache-Control: no-cache, must-revalidate");
+        header('X-Accel-Buffering: no');
+
+
+        while (true) {
+            static $i = 0;
+            if($i == 10){
+
+                trigger_error('test '.$i, E_USER_WARNING);
+                //throw new Exception('Sky is a limit!');
+            }
+            //$mes = $messages->getUnreadMessages();
+            $mes = [
+                ['username'=>'Ziomek', 'message' => $i.': '.date('h:i:s').' testowy mesedż '],
+            ];
+            if (!empty($mes)) {
+                foreach ($mes as $message) {
+                    //$message['message'] = $i.': '.$message['message'];
+                    $data = json_encode($message);
+                    echo "event: {$name}\r\nid: {$id}\r\ndata: $data\r\n\r\n";
+                    $id++;
+                    //$stream->send($message);
+                }
+            }
+            $i++;
+            flush();
+            if (connection_aborted()) {
+                break;
+            }
+            //usleep(200000);
+            sleep(1);
+        }
+
+
+        ob_end_clean();
     }
 
     /**
