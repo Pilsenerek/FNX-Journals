@@ -11,6 +11,9 @@ use Mockery;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class AuthTest extends TestCase
 {
 
@@ -20,9 +23,6 @@ class AuthTest extends TestCase
         $this->userRepository = Mockery::mock('overload:'. UserRepository::class);
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testFireWall() {
          $this->userRepository->shouldReceive('getUserAuth')->times()->andReturn(new User());
          
@@ -36,12 +36,8 @@ class AuthTest extends TestCase
         $_REQUEST['a'] = 'login';
         $auth = new Auth();
         $this->assertNull($auth->firewall('IndexController', 'tagsAction'));
-        //Mockery::close();
     }
 
-    /**
-     * @runInSeparateProcess
-     */    
     public function testGetUser(){
         $this->userRepository->shouldReceive('getUser')->times()->andReturn(null);
         $this->mockCfg();
@@ -49,9 +45,6 @@ class AuthTest extends TestCase
         $this->assertNull($auth->getUser());
     }
     
-    /**
-     * @runInSeparateProcess
-     */    
     public function testAuthenticate(){
         $this->userRepository->shouldReceive('getUserAuth')->times()->andReturn(new User());
         $this->mockCfg();
@@ -59,9 +52,6 @@ class AuthTest extends TestCase
         $this->assertInstanceOf(User::class, $auth->authenticate('wefewfewf', 'wefwefwe'));
     }
     
-    /**
-     * @runInSeparateProcess
-     */    
     public function testAuthenticateFail(){
         $this->userRepository->shouldReceive('getUserAuth')->times()->andReturn(null);
         $this->mockCfg();
@@ -69,9 +59,6 @@ class AuthTest extends TestCase
         $this->assertNull($auth->authenticate('wefewfewf', 'wefwefwe'));
     }
     
-    /**
-     * @runInSeparateProcess
-     */    
     public function testLogout(){
         $this->mockCfg();
         $auth = new Auth();
@@ -79,9 +66,6 @@ class AuthTest extends TestCase
         $this->assertTrue($auth->logout());
     }
     
-    /**
-     * @runInSeparateProcess
-     */    
     public function testRefresh(){
         $user = $this->createMock(User::class);
         $_SESSION['user'] = $user;
@@ -91,9 +75,6 @@ class AuthTest extends TestCase
         $this->assertInstanceOf(User::class, $auth->refresh());
     }
     
-    /**
-     * @runInSeparateProcess
-     */    
     public function testRefreshFail(){
         $_SESSION['user'] = null;
         $this->userRepository->shouldReceive('getUserById')->times()->andReturn('dupa');
@@ -102,9 +83,6 @@ class AuthTest extends TestCase
         $this->assertNull($auth->refresh());
     }
     
-    /**
-     * @runInSeparateProcess
-     */
     public function testFireWallAllActions() {
         $this->mockCfg(false);
         

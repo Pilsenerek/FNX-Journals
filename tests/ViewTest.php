@@ -8,6 +8,9 @@ use App\View;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class ViewTest extends TestCase
 {
 
@@ -15,9 +18,9 @@ class ViewTest extends TestCase
         $mockedAuth = Mockery::mock('overload:' . Auth::class);
         $mockedAuth->shouldReceive('getUser')->times()->andReturn(null);
     }
-    
-     /**
-     * @runInSeparateProcess
+
+    /**
+     * @preserveGlobalState disabled
      */
     public function testRender() {
         

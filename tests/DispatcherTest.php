@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Test;
 
 use App\Auth;
+use App\Controller\IndexController;
 use App\Dispatcher;
 use App\Repository\ArticleRepository;
 use App\Repository\AuthorRepository;
@@ -17,12 +18,12 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @todo refactor this and find the best way to mock class_exists function
+ * @runTestsInSeparateProcesses
  */
 class DispatcherTest extends TestCase
 {
 
     /**
-    * @runInSeparateProcess
     * @preserveGlobalState disabled
     */  
     public function testDispatch() {
@@ -39,7 +40,6 @@ class DispatcherTest extends TestCase
     }
     
     /**
-    * @runInSeparateProcess
     * @preserveGlobalState disabled
     */  
     public function testDispatchBadAction() {
@@ -57,7 +57,6 @@ class DispatcherTest extends TestCase
     }   
 
     /**
-    * @runInSeparateProcess
     * @preserveGlobalState disabled
     */      
     public function testDispatchBadAll(){
@@ -66,7 +65,19 @@ class DispatcherTest extends TestCase
         $this->expectException(Exception::class);
         Mockery::mock('overload:'. Auth::class);
         $dispatcher = new Dispatcher();
-        $dispatcher->dispatch();       
+        $dispatcher->dispatch();
+    }
+
+    /**
+     * @preserveGlobalState disabled
+     */
+    public function testDispatchNull(){
+        $_REQUEST['c'] = 'index';
+        //$_REQUEST['a'] = 'chatAddMessage';
+        $_REQUEST['a'] = 'logout';
+        //Mockery::mock('overload:'. IndexController::class);
+        $dispatcher = new Dispatcher();
+        $this->assertNull($dispatcher->dispatch());
     }
     
 }

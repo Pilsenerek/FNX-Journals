@@ -12,6 +12,9 @@ use PDO;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class UserRepositoryTest extends TestCase {
 
     public function setUp() {
@@ -23,8 +26,8 @@ class UserRepositoryTest extends TestCase {
     }
 
     /**
-     * @runInSeparateProcess
-     */  
+     * @preserveGlobalState disabled
+     */
     public function testGetUserAuth() {
         $mock = $this->getMockedUserRepository(false, false);
         $this->assertInstanceOf(User::class, $mock->getUserAuth('wefwefwef', 'wefwewefw'));
@@ -32,19 +35,19 @@ class UserRepositoryTest extends TestCase {
         $mock = $this->getMockedUserRepository(false, true);
         $this->assertNull($mock->getUserAuth('wefwefwef', 'wefwewefw'));
     }
-    
+
     /**
-     * @runInSeparateProcess
-     */  
+     * @preserveGlobalState disabled
+     */
     public function testGetUserById() {
         $mock = $this->getMockedUserRepository();
         
         $this->assertInstanceOf(User::class, $mock->getUserById(12345));
     }
-    
+
     /**
-     * @runInSeparateProcess
-     */  
+     * @preserveGlobalState disabled
+     */
     public function testBuyArticle() {
         $art = new \App\Model\Article();
         $art->setId(1234);

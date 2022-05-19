@@ -16,7 +16,7 @@ class Config {
     /** @var [] */
     private $config = [
         'db' => [
-            'dsn' => 'mysql:host=mysql;port=3306;dbname=fnx',
+            'dsn' => 'mysql:host=db;port=3306;dbname=fnx',
             'username' => 'root',
             'password' => 'root',
         ],

@@ -16,6 +16,9 @@ use PDOStatement;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class ArticleRepositoryTest extends TestCase {
 
     public function setUp() {
@@ -39,7 +42,6 @@ class ArticleRepositoryTest extends TestCase {
     }
     
     /**
-    * @runInSeparateProcess
     * @preserveGlobalState disabled
     */   
     public function testGetArticleById() {
@@ -52,7 +54,6 @@ class ArticleRepositoryTest extends TestCase {
     }
 
     /**
-    * @runInSeparateProcess
     * @preserveGlobalState disabled
     */   
     public function testGetArticles() {

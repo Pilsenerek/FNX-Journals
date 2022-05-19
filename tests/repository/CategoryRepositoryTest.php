@@ -9,17 +9,11 @@ use PHPUnit\Framework\TestCase;
 
 class CategoryRepositoryTest extends TestCase {
 
-     /**
-     * @runInSeparateProcess
-     */
     public function testGetCategoryById() {
         $mock = $this->getMockedCategryRepository();
         $this->assertInstanceOf(\App\Model\Category::class, $mock->getCategoryById(999));
     }
     
-    /**
-     * @runInSeparateProcess
-     */
     public function testGetCategories() {
         $mock = $this->getMockedCategryRepository();
         $this->assertInstanceOf(\App\Model\Category::class, $mock->getCategories()[0]);

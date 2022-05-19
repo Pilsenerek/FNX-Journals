@@ -20,6 +20,9 @@ use Exception;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class IndexControllerTest extends TestCase {
 
     private $auth;
@@ -50,38 +53,53 @@ class IndexControllerTest extends TestCase {
         Mockery::mock('overload:' . UserRepository::class)->shouldReceive('buyArticle')->times()->andReturn(true);
     }
 
+    /**
+     * @preserveGlobalState disabled
+     */
     public function testIndexAction() {
         $this->assertArrayHasKey('articles', $this->getIndexController()->indexAction());
     }
 
+    /**
+     * @preserveGlobalState disabled
+     */
     public function testArticleAction() {
         $_REQUEST['id'] = 999;
         $this->assertArrayHasKey('article', $this->getIndexController()->articleAction());
     }
 
     /**
-     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testCategoriesAction() {
         $this->assertArrayHasKey('categories', $this->getIndexController()->categoriesAction());
     }
 
+    /**
+     * @preserveGlobalState disabled
+     */
     public function testAuthorsAction() {
         $this->assertArrayHasKey('authors', $this->getIndexController()->authorsAction());
     }
 
+    /**
+     * @preserveGlobalState disabled
+     */
     public function testAuthorDetailAction() {
         $_REQUEST['author_id'] = 999;
         $this->assertArrayHasKey('author', $this->getIndexController()->authorDetailAction());
         $this->assertArrayHasKey('articles', $this->getIndexController()->authorDetailAction());
     }
 
+    /**
+     * @preserveGlobalState disabled
+     */
     public function testTagsAction() {
         $this->assertArrayHasKey('tags', $this->getIndexController()->tagsAction());
     }
 
     /**
-     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testLoginAction() {
         //empty post
@@ -97,7 +115,7 @@ class IndexControllerTest extends TestCase {
     }
 
     /**
-     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testLoginActionFail() {
         $this->auth->shouldReceive('authenticate')->once()->andReturn(null);
@@ -108,7 +126,7 @@ class IndexControllerTest extends TestCase {
     }
 
     /**
-     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testLogoutAction() {
         $mock = $this->getIndexController();
@@ -116,7 +134,7 @@ class IndexControllerTest extends TestCase {
     }
 
     /**
-     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testBuyAction() {
         $_REQUEST['article_id'] = 999;
@@ -130,7 +148,7 @@ class IndexControllerTest extends TestCase {
     }
 
     /**
-     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testBuyActionFail() {
         $_REQUEST['article_id'] = 999;

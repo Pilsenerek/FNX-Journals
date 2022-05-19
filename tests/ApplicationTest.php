@@ -8,6 +8,9 @@ use App\Dispatcher;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class ApplicationTest extends TestCase
 {
 
@@ -19,6 +22,9 @@ class ApplicationTest extends TestCase
         ;
     }
 
+    /**
+     * @preserveGlobalState disabled
+     */
     public function testRun() {
         $this->assertStringContainsString("<html>", $this->getApplication()->run());
         $this->assertStringContainsString("<html>", (string) $this->getApplication());
