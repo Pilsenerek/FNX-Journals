@@ -1,24 +1,22 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<phpunit bootstrap="./vendor/autoload.php" colors="true" stderr="true">
-
-    <testsuites>
-        <testsuite name="FNX-Journals">
-            <directory>./tests</directory>
-        </testsuite>
-    </testsuites>
-
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./src/</directory>
-            <exclude>
-                <directory suffix=".php">./src/template/</directory>
-            </exclude>
-        </whitelist>
-    </filter>
-
-    <logging>
-        <log type="coverage-html" target="./var/test-coverage" lowUpperBound="50" highLowerBound="80" />
-        <log type="testdox-html" target="./var/testdox.html" />
-    </logging>
-
+<?xml version="1.0" encoding="utf-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="./vendor/autoload.php" colors="true" stderr="true" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage processUncoveredFiles="false">
+    <include>
+      <directory suffix=".php">./src/</directory>
+    </include>
+    <exclude>
+      <directory suffix=".php">./src/template/</directory>
+    </exclude>
+    <report>
+      <html outputDirectory="./var/test-coverage" lowUpperBound="50" highLowerBound="80"/>
+    </report>
+  </coverage>
+  <testsuites>
+    <testsuite name="FNX-Journals">
+      <directory>./tests</directory>
+    </testsuite>
+  </testsuites>
+  <logging>
+    <testdoxHtml outputFile="./var/testdox.html"/>
+  </logging>
 </phpunit>

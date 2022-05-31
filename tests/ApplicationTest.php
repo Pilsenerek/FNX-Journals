@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 class ApplicationTest extends TestCase
 {
 
-    public function setUp() {
+    public function setUp() : void {
         Mockery::mock('overload:' . Dispatcher::class)
                 ->shouldReceive('dispatch')
                 ->once()
@@ -36,7 +36,7 @@ class ApplicationTest extends TestCase
         return $application;
     }
 
-    public function tearDown() {
+    public function tearDown() : void {
         Mockery::close();
     }
 

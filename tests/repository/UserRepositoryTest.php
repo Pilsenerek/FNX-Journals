@@ -17,7 +17,7 @@ use stdClass;
  */
 class UserRepositoryTest extends TestCase {
 
-    public function setUp() {
+    public function setUp() : void {
         Mockery::mock('overload:' . ArticleRepository::class)
                 ->shouldReceive('getArticles')
                 ->once()

@@ -27,7 +27,7 @@ class IndexControllerTest extends TestCase {
 
     private $auth;
 
-    public function setUp() {
+    public function setUp() : void {
         $mockedArticle = $this->createMock(Article::class);
         $mockedArticle->expects($this->any())->method('isFree')->willReturn(false);
         $mockedArticleRepository = Mockery::mock('overload:' . ArticleRepository::class);
@@ -168,7 +168,7 @@ class IndexControllerTest extends TestCase {
         return $indexController;
     }
 
-    public function tearDown() {
+    public function tearDown() : void {
 
         Mockery::close();
     }

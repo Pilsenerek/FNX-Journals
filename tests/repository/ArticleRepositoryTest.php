@@ -21,7 +21,7 @@ use stdClass;
  */
 class ArticleRepositoryTest extends TestCase {
 
-    public function setUp() {
+    public function setUp() : void {
         Mockery::mock('overload:'.AuthorRepository::class)
                 ->shouldReceive('getAuthorsByArticleId')
                 ->once()
@@ -122,7 +122,7 @@ class ArticleRepositoryTest extends TestCase {
         return $mockedPDO;
     }
 
-    public function tearDown() {
+    public function tearDown() : void {
         
         Mockery::close();
     }

@@ -19,7 +19,7 @@ class AuthTest extends TestCase
 
     private $userRepository;
     
-    public function setUp() {
+    public function setUp() : void {
         $this->userRepository = Mockery::mock('overload:'. UserRepository::class);
     }
 
@@ -107,7 +107,7 @@ class AuthTest extends TestCase
         return $mCfg;
     }
 
-    protected function tearDown() {
+    protected function tearDown() : void {
         Mockery::close();
     }
 

@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 class ViewTest extends TestCase
 {
 
-    public function setUp() {
+    public function setUp() : void {
         $mockedAuth = Mockery::mock('overload:' . Auth::class);
         $mockedAuth->shouldReceive('getUser')->times()->andReturn(null);
     }
@@ -34,7 +34,7 @@ class ViewTest extends TestCase
         return new View();
     }
     
-    public function tearDown() {
+    public function tearDown() : void {
         Mockery::close();
     }
 

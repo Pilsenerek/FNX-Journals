@@ -16,7 +16,7 @@
     },
     "require": {},
     "require-dev": {
-        "phpunit/phpunit": "*",
+        "phpunit/phpunit": "^9.5",
         "mockery/mockery": "dev-master"
     }
 }
