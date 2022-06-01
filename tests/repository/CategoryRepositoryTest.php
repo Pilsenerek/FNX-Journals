@@ -4,52 +4,49 @@ declare(strict_types=1);
 
 namespace App\Test\Repository;
 
+use App\Model\Category;
 use App\Repository\CategoryRepository;
+use PDO;
+use PDOStatement;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 class CategoryRepositoryTest extends TestCase {
 
     public function testGetCategoryById() {
-        $mock = $this->getMockedCategryRepository();
-        $this->assertInstanceOf(\App\Model\Category::class, $mock->getCategoryById(999));
+        $mock = $this->getMockedCategoryRepository();
+        $this->assertInstanceOf(Category::class, $mock->getCategoryById(999));
     }
     
     public function testGetCategories() {
-        $mock = $this->getMockedCategryRepository();
-        $this->assertInstanceOf(\App\Model\Category::class, $mock->getCategories()[0]);
+        $mock = $this->getMockedCategoryRepository();
+        $this->assertInstanceOf(Category::class, $mock->getCategories()[0]);
     }
 
-    private function getMockedCategryRepository(){
+    private function getMockedCategoryRepository(): CategoryRepository
+    {
         
         return new CategoryRepository($this->getMockedPDO());
     }
     
     private function getMockedPDO() {
-        $mockedReturn = new \stdClass();
+        $mockedReturn = new stdClass();
         $mockedReturn->id = 123;
-        $mockedReturn->name = 'egehtrhegth';
+        $mockedReturn->name = 'Test name';
 
         $mockedExecute = $this
-                ->getMockBuilder(\stdClass::class)
-                ->setMethods(['execute', 'fetchObject'])
+                ->getMockBuilder(PDOStatement::class)
                 ->getMock()
         ;
-        $mockedExecute
-                ->expects($this->any())->method('execute')
-                ->willReturn(true)
-        ;
-        $mockedExecute
-                ->expects($this->at(1))->method('fetchObject')
-                ->willReturn($mockedReturn)
-        ;
+        $mockedExecute->method('execute')->willReturn(true);
+        $mockedExecute->method('fetchObject')->will($this->onConsecutiveCalls($mockedReturn, false));
+        //$mockedExecute->method('fetchObject')->will($this->returnValueMap($arrayWithMockedData));
 
-        $mockedPDO = $this->getMockBuilder(\PDO::class)
+        $mockedPDO = $this->getMockBuilder(PDO::class)
                 ->disableOriginalConstructor()
-                ->setMethods(['prepare', 'execute', 'fetchObject'])
                 ->getMock()
         ;
         $mockedPDO
-                ->expects($this->any())
                 ->method('prepare')
                 ->willReturn($mockedExecute)
         ;
